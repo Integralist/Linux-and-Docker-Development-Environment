@@ -53,4 +53,4 @@ docker run -p 4567:4567 -v /www:/www -d integralist/sinatra
 docker ps
 
 # Check application is running (we should be able to do this from outside the VM as well thanks to Vagrantfile port forwarding)
-curl -i http://localhost:4567/
+# curl -i http://localhost:4567/
