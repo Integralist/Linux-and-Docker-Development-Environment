@@ -39,7 +39,8 @@ docker build -t integralist/sinatra /var
 docker images
 
 # Run a container (in the background using -d) from our image
-# Make sure to expose the port to the CoreOS VM (using -p host:container)
+# Make sure to expose the port to the VM (using -p host:container)
+# Also mount the direction from the VM into the container
 docker run -p 4567:4567 -v /www:/www -d integralist/sinatra
 
 # Check the container is running
