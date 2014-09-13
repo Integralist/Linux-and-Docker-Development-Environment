@@ -15,7 +15,9 @@ apt-get update # now we have our new repository to search
 apt-get install -y lxc-docker
 
 # Define our Docker container
-cat > /var/Dockerfile <<EOF
+# We place it in the /srv directory as that is the recommended place for
+# site-specific data which is served by the system
+cat > /srv/Dockerfile <<EOF
 # Build from...
 FROM ubuntu:14.04
 MAINTAINER Mark McDonnell <mark.mcdx@gmail.com>
@@ -33,14 +35,18 @@ ENTRYPOINT ["ruby", "/www/app.rb"]
 EOF
 
 # Create an image from our Dockerfile
-docker build -t integralist/sinatra /var
+#
+# BE CAREFUL!
+# Any other files in this folder will be tar'ed up
+# and uploaded to the docker engine to create the image from
+docker build -t integralist/sinatra /srv
 
 # Check the image was created
 docker images
 
 # Run a container (in the background using -d) from our image
 # Make sure to expose the port to the VM (using -p host:container)
-# Also mount the direction from the VM into the container
+# Also mount the directory from the VM into the container
 docker run -p 4567:4567 -v /www:/www -d integralist/sinatra
 
 # Check the container is running
