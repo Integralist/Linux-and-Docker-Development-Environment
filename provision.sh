@@ -14,6 +14,20 @@ apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8
 apt-get update # now we have our new repository to search
 apt-get install -y lxc-docker
 
+# Modify `DOCKER_OPTS` so the Docker daemon is accessible from a private ip
+# Note: The docker daemon location changes per distro...
+#       CentOS => /etc/sysconfig/docker
+#       Ubuntu => /etc/default/docker
+chmod 777 /etc/default/docker
+echo "DOCKER_OPTS=\"--host tcp://172.17.8.100:2375\"" >> /etc/default/docker
+service docker restart
+
+# Make sure user can now access docker daemon via DOCKER_HOST
+cat > ~/.bashrc <<EOF
+export DOCKER_HOST=tcp://172.17.8.100:2375
+EOF
+source ~/.bashrc
+
 # Define our Docker container
 # We place it in the /srv directory as that is the recommended place for
 # site-specific data which is served by the system
@@ -33,6 +47,9 @@ EXPOSE 4567
 # Execute the application that we've copied over to the container
 ENTRYPOINT ["ruby", "/www/app.rb"]
 EOF
+
+# Switch to root user (as you'll be able to access DOCKER_HOST and build image)
+su
 
 # Create an image from our Dockerfile
 #
