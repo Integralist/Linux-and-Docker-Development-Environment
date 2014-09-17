@@ -12,8 +12,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Sync our application files into the VM (creating the directory if it doesn't exist)
   config.vm.synced_folder "./Application", "/www", create: true
 
+  # We assume the sudo role and specify the provisioning script
   config.vm.provision "shell" do |s|
     s.privileged = true
     s.path = "provision.sh"
   end
+
+  # Allow Vagrant to forward your ~/.ssh credentials to the instance
+  # This allows us to use Git to clone private repositories
+  config.ssh.forward_agent = true
 end

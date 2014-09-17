@@ -1,8 +1,26 @@
-# Get Vim and tmux installed
+# Install dependencies
 apt-get update
-apt-get remove vim-tiny
-apt-get install vim
-apt-get install tmux
+apt-get remove -y vim-tiny
+apt-get install -y vim tmux git
+
+# Change to Bash shell (as Zsh isn't available)
+chsh -s /bin/bash
+
+# Avoid the shell asking us to authorise the authenticity of github.com
+# This happens when doing a git clone for the first time
+echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+
+# Install dotfiles...
+dotfiles_location=/home/vagrant/dotfiles
+git clone https://github.com/Integralist/dotfiles.git $dotfiles_location
+cd $dotfiles_location && git fetch && git checkout linux
+
+# Ensure we don't move unnecessary files
+shopt -s extglob
+mv !(.|..|.git|README.md) ..
+
+# Clean-up
+cd ../ && rm -rf dotfiles
 
 # Setup for getting Docker installed
 cd /etc/apt/sources.list.d/
