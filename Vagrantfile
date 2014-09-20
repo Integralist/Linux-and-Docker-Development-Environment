@@ -21,4 +21,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Allow Vagrant to forward your ~/.ssh credentials to the instance
   # This allows us to use Git to clone private repositories
   config.ssh.forward_agent = true
+
+  # Allow tmux to utilize xclip to store copied buffer in system clipboard
+  # Make sure you have XQuartz running on the host
+  config.ssh.forward_x11 = true
 end
