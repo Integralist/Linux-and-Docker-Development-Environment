@@ -1,10 +1,53 @@
 # Install dependencies
 apt-get update
 apt-get remove vim-tiny -y
-apt-get install vim tmux git tree htop reptyr -y
+apt-get install vim git tree htop reptyr build-essential -y
 
 # Change to Bash shell (as Zsh isn't available)
 chsh -s /bin/bash
+
+# Install tmux 1.9 (which is surprisingly harder than it should be)
+
+tmux_version="1.9"
+tmux_patch_version="a" # leave empty for stable releases
+
+libevent_version="2.0.21"
+ncurses_version="5.9"
+
+tmux_name="tmux-$tmux_version"
+tmux_relative_url="$tmux_name/$tmux_name$tmux_patch_version"
+libevent_name="libevent-$libevent_version-stable"
+ncurses_name="ncurses-$ncurses_version"
+
+target_dir="/usr/local"
+
+wget -O $tmux_name.tar.gz http://sourceforge.net/projects/tmux/files/tmux/$tmux_relative_url.tar.gz/download
+wget -O $libevent_name.tar.gz https://github.com/downloads/libevent/libevent/$libevent_name.tar.gz
+wget -O $ncurses_name.tar.gz ftp://ftp.gnu.org/gnu/ncurses/$ncurses_name.tar.gz
+
+# libevent installation
+tar xf $libevent_name.tar.gz
+cd $libevent_name
+./configure
+make
+make install
+cd -
+
+# ncurses installation (requires c++ compiler from build-essential package)
+tar xvzf $ncurses_name.tar.gz
+cd $ncurses_name
+./configure
+make
+make install
+cd -
+
+# tmux installation
+tar xvzf ${tmux_name}*.tar.gz
+cd ${tmux_name}*/
+./configure CFLAGS="-I$target_dir/include -I$target_dir/include/ncurses" LDFLAGS="-L$target_dir/lib -L$target_dir/include/ncurses -L$target_dir/include"
+CPPFLAGS="-I$target_dir/include -I$target_dir/include/ncurses" LDFLAGS="-static -L$target_dir/include -L$target_dir/include/ncurses -L$target_dir/lib" make
+cp tmux /usr/bin
+cd -
 
 # For the Reptyr program to work we need to enable system access
 # We do this by changing the ptrace scope from one to zero
@@ -93,6 +136,3 @@ docker run -p 4567:4567 -v /www:/www -d integralist/sinatra
 
 # Check the container is running
 docker ps
-
-# Check application is running (we should be able to do this from outside the VM as well thanks to Vagrantfile port forwarding)
-# curl -i http://localhost:4567/
