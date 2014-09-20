@@ -1,10 +1,17 @@
 # Install dependencies
 apt-get update
-apt-get remove -y vim-tiny
-apt-get install -y vim tmux git
+apt-get remove vim-tiny -y
+apt-get install vim tmux git tree htop reptyr -y
 
 # Change to Bash shell (as Zsh isn't available)
 chsh -s /bin/bash
+
+# For the Reptyr program to work we need to enable system access
+# We do this by changing the ptrace scope from one to zero
+sed -i 's/kernel.yama.ptrace_scope = 1/kernel.yama.ptrace_scope = 0/' /etc/sysctl.d/10-ptrace.conf
+
+# Because this is a system control daemon, we need to restart the relevant service
+sysctl -p /etc/sysctl.d/10-ptrace.conf
 
 # Avoid the shell asking us to authorise the authenticity of github.com
 # This happens when doing a git clone for the first time
