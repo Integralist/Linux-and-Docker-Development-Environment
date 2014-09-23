@@ -4,8 +4,11 @@ apt-get update
 apt-get remove vim-tiny -y
 apt-get install vim tmux git tree htop reptyr xclip -y
 
-# Change to Bash shell (as Zsh isn't available)
-chsh -s /bin/bash
+# Install Zsh shell if it's not available
+if ! cat /etc/shells | grep zsh; then
+  echo "Zsh is not available, so we'll install it now"
+  apt-get install zsh -y
+fi
 
 # For the Reptyr program to work we need to enable system access
 # We do this by changing the ptrace scope from one to zero
@@ -29,6 +32,14 @@ mv !(.|..|.git|README.md) ..
 
 # Clean-up
 cd ../ && rm -rf dotfiles
+
+# Change shell permanently to Zsh shell
+chsh -s $(which zsh) vagrant
+
+# Trigger Zsh shell (otherwise when we log in we'll be stuck in Bash still)
+zsh
+
+exit
 
 # Setup for getting Docker installed
 cd /etc/apt/sources.list.d/
