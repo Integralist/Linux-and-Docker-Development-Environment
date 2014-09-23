@@ -36,11 +36,6 @@ cd ../ && rm -rf dotfiles
 # Change shell permanently to Zsh shell
 chsh -s $(which zsh) vagrant
 
-# Trigger Zsh shell (otherwise when we log in we'll be stuck in Bash still)
-zsh
-
-exit
-
 # Setup for getting Docker installed
 cd /etc/apt/sources.list.d/
 touch docker.list
