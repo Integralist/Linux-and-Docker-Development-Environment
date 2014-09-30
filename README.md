@@ -33,6 +33,17 @@ I've set-up the VM to allow you to develop directly from within the VM using tmu
 
 Because we're syncing our application directory into the VM and then mounting that VM sync'ed folder into the container as a volume, it means we can develop from the host machine as well as from within the VM (as the files changed will be synced to the VM and then passed directly through to the container).
 
+## Reptyr
+
+> reptyr is a utility for taking an existing running program and attaching it to a new terminal
+
+- Open a program (e.g. `top`)
+- Suspend that program (e.g. `<C-z>`)
+- Send the program into a background process (e.g. `bg`)
+- Detach the program from its *current* parent (e.g. `disown top`)
+- Open your terminal multiplexer (e.g. `tmux` or `screen`)
+- Reattach the program to your terminal multiplexer using Reptyr (e.g. `reptyr $(pgrep top)`)
+
 ## Process
 
 The steps I took to get the initial Vagrant file and box were:
