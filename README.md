@@ -23,9 +23,9 @@ If you want to develop from the VM then that's fine as well, you can run `vagran
 
 But if you want to use Docker from inside the VM you now have to switch to being the `root` user. So once inside the VM run `su` followed by the password Vagrant assigns to the `root` user (which is `vagrant`).
 
-## No updates showing?
+## Application updates not showing?
 
-If you make a change to the application then you'll need to restart the docker container with `docker restart {container_id}`
+If you make a change to the Ruby application then you'll need to restart the docker container with `docker restart {container_id}`
 
 ## Inside or out?
 
@@ -43,6 +43,14 @@ Because we're syncing our application directory into the VM and then mounting th
 - Detach the program from its *current* parent (e.g. `disown top`)
 - Open your terminal multiplexer (e.g. `tmux` or `screen`)
 - Reattach the program to your terminal multiplexer using Reptyr (e.g. `reptyr $(pgrep top)`)
+
+## Accessing the system clipboard
+
+When using a GUI-less version of Linux like this you wont be able to take advantage of the system clipboard inside the VM unless you use a program like [XQuartz](http://xquartz.macosforge.org/). Download and run XQuartz, then start up your VM. The `Vagrantfile` has been set-up to forward XQuartz onto the VM, meaning that the `xclip` program (installed by our `provision.sh`) will now work as intended.
+
+## Dotfiles
+
+You'll notice inside the `provision.sh` I'm downloading and installing my own [dotfiles](https://github.com/Integralist/dotfiles/tree/linux) - I would highly recommend you review the `.tmux.conf`, `.vimrc` and `.vim` files/folders to see what settings, key bindings and plugins I've installed for tmux and Vim. For example, I've configured tmux to have Vim style bindings for copy and paste (e.g. `v` to start visual selection and `y` to yank to the system clipboard using `xclip`).
 
 ## Process
 
