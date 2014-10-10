@@ -11,7 +11,9 @@ require the use of the `--provider` flag
 
 This repository is set-up to automate the construction of a basic Ruby application that is running inside a Docker container in a Ubuntu VM.
 
-Vim and tmux is installed inside the VM and so you could have just developed directly inside of the VM without any issues, but I've made it so that you can develop outside the VM (e.g. in your host environment). 
+Vim and tmux are installed inside the VM because I wanted to take advantage of the `vagrant share --ssh` feature for pair programming whilst having better control over my tmux windows (see [this gist](https://gist.github.com/Integralist/73ba11d03442ce3e3e9c) which explains the technique). Also take a look at the `provision.sh` script to see what else is happening when the VM is booting up. 
+
+Although you can just develop directly inside of the VM without any issues, I've since made it possible for you to develop outside the VM (e.g. in your host environment)... 
 
 For you to access the running application from your host machine we needed to tell the Docker daemon to run from a specific private ip (`172.17.8.100`). We also set-up the VM to have the same ip address. Along with some trickery in our `provision.sh` we're able to run the Docker CLI from the host machine and access the application running inside the VM as well.
 
@@ -25,7 +27,7 @@ But if you want to use Docker from inside the VM you now have to switch to being
 
 ## Application updates not showing?
 
-If you make a change to the Ruby application then you'll need to restart the docker container with `docker restart {container_id}`
+If you make a change to the Ruby application then you'll need to restart the docker container with `docker restart {container_id}` or utilise a gem that reloads the application within the Docker container whenever changes to a file are detected.
 
 ## Inside or out?
 
